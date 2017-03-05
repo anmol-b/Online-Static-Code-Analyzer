@@ -15,12 +15,13 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 userIndex = "users"
 
-db_user = 'anmol_b7'
-db_pass = 'password#77'
+db_user = '' #username
+db_pass = '' #password
 
 
-app.config['ALLOWED_EXTENSIONS'] = set(['py'])
+app.config['ALLOWED_EXTENSIONS'] = set(['py']) #Only Pyhton files tobe excepted.
 
+#Validate file extension.
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
@@ -28,7 +29,7 @@ def allowed_file(filename):
 
 # Connecting to MongoDB
 def createDBConn():
-    client = pymongo.MongoClient('mongodb://anmol_b7:password#77@ds119738.mlab.com:19738/securedb')
+    client = pymongo.MongoClient('mongodb://'+db_user+':'+db_pass+'@########.mlab.com:######/securedb')#MongoDB URI
     db = client.securedb
     return client, db
 
@@ -46,8 +47,7 @@ def login_user():
         else:
             if (request.form['loginid'] != "") and (request.form['password'] != ""):
                 loginid = request.form['loginid']
-                #password = hashlib.md5(request.form['password']
-                getmd5 = hashlib.md5(request.form['password'].encode())
+                getmd5 = hashlib.md5(request.form['password'].encode()) #Generate MD5 of the password and then store it.
                 password = getmd5.hexdigest()
                 client, db = createDBConn()
                 userDirectory = db[userIndex]
@@ -122,7 +122,7 @@ def upload():
     result = os.system(running_command)
     f = open(target + "analysed_" + filename.rsplit('.', 1)[0] + ".txt", 'r')
     content = f.read()
-    return "<b>Results are :</b> \n \n" + content#redirect(url_for('uploaded_file', filename=filename))
+    return "<b>Results are :</b> \n \n" + content
 
 if __name__ == '__main__':
   app.run()
